@@ -1,0 +1,53 @@
+{% extends "tasks/base.html" %}
+
+{% block title %}Task List{% endblock %}
+
+{% block content %}
+    <h1>Task List</h1>
+
+    <!-- Форма для фильтрации и поиска -->
+    <form method="get" class="row g-3">
+        <div class="col-md-4">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <input type="text" name="search" class="form-control" placeholder="Search by title" value="{{ search_query }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </form>
+
+    <!-- Список задач -->
+    <ul class="list-group mt-3">
+        {% for task in tasks %}
+            <li class="list-group-item">
+                <h5>{{ task.title }}</h5>
+                <p>{{ task.description }}</p>
+                <small>Category: {{ task.category.name }}</small>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No tasks found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+<!-- Список задач -->
+<ul class="list-group mt-3">
+    {% for task in tasks %}
+        <li class="list-group-item">
+            <h5><a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a></h5>
+            <p>{{ task.description }}</p>
+            <small>Category: {{ task.category.name }}</small>
+        </li>
+    {% empty %}
+        <li class="list-group-item">No tasks found.</li>
+    {% endfor %}
+</ul>
